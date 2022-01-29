@@ -1,9 +1,9 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import Home from './Home'
+import Chat from './Chat'
 
 test('renders learn react link', () => {
-  render(<Home />)
+  render(<Chat username='test' />)
   const linkElement = screen.getByText(/learn react/i)
   expect(linkElement).toBeInTheDocument()
 })
