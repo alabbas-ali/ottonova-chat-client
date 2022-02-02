@@ -11,7 +11,7 @@ function App() {
   }
 
   return (
-    <Chat username={token}></Chat>
+    <Chat token={token}></Chat>
   )
 }
 

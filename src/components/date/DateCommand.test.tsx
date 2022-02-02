@@ -1,9 +1,9 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import Chat from './Chat'
+import DateCommand from './DateCommand'
 
 test('renders learn react link', () => {
-  render(<Chat token='test' />)
+  render(<DateCommand  />)
   const linkElement = screen.getByText(/learn react/i)
   expect(linkElement).toBeInTheDocument()
 })
