@@ -1,22 +1,28 @@
 import React from 'react'
-//import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+
+import { Command } from '../../models/command'
+
+import StarRating from './StarRating'
+
 import './Rate.scss'
 
 interface RateProp {
-  //username: string
+  command: Command
 }
 
 function Rate(prop: RateProp) {
 
   return (
     <div className="rate-wrapper">
-      Rate Command
+      <label>Please rate your experience : </label> 
+      <StarRating />
     </div>
   )
 }
 
 Rate.propTypes = {
-  //username: PropTypes.string.isRequired
+  command: PropTypes.object.isRequired
 }
 
 export default Rate

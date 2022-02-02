@@ -2,11 +2,14 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Socket } from 'socket.io-client'
 import stringHash from '@sindresorhus/string-hash'
-import './Messages.scss'
+
+import { Command, CommandType } from '../../models/command'
 import DateCommand from '../date/DateCommand'
 import Complete from '../complete/Complete'
 import Rate from '../rate/Rate'
 import Map from '../map/Map'
+
+import './Messages.scss'
 
 interface MessagesProp {
   username: string
@@ -25,18 +28,6 @@ interface MessageWithTime extends Message {
 
 interface MessageCollection {
   [key: string]: MessageWithTime
-}
-
-enum CommandType {
-  Date = 'date',
-  Map = 'map',
-  Rate = 'rate',
-  Complete = 'complete',
-}
-
-interface Command {
-  type: CommandType,
-  data: string,
 }
 
 function Messages(prop: MessagesProp) {
@@ -133,20 +124,18 @@ function Messages(prop: MessagesProp) {
    * @param type 
    * @returns 
    */
-  const renderCommandComponent = (type: CommandType | undefined) => {
-    console.log('type : ', type)
-    switch (type) {
+  const renderCommandComponent = (command: Command | null) => {
+    switch (command?.type) {
       case CommandType.Date:
-        return <DateCommand ></DateCommand>
+        return <DateCommand command={command} ></DateCommand>
       case CommandType.Map:
-        return <Map ></Map>
+        return <Map command={command} ></Map>
       case CommandType.Rate:
-        return <Rate ></Rate>
+        return <Rate command={command} ></Rate>
       case CommandType.Complete:
-        return <Complete ></Complete>
-      default:
-        return <></>
+        return <Complete command={command} ></Complete>
     }
+    return <></>
   }
 
   return (
@@ -167,7 +156,7 @@ function Messages(prop: MessagesProp) {
         )}
       </div>
       <div>
-        {renderCommandComponent(command?.type)}
+        {renderCommandComponent(command)}
       </div>
       <form onSubmit={submitForm}>
         <input

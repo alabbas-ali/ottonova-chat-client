@@ -1,9 +1,10 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import './Complete.scss'
+import { Command } from '../../models/command'
 
 interface CompleteProp {
-  //username: string
+  command: Command
 }
 
 function Complete(prop: CompleteProp) {
@@ -15,7 +16,7 @@ function Complete(prop: CompleteProp) {
 }
 
 Complete.propTypes = {
-  //username: PropTypes.string.isRequired
+  command: PropTypes.object.isRequired
 }
 
 export default Complete
