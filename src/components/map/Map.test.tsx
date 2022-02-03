@@ -7,7 +7,7 @@ test('renders learn react link', () => {
   render(<Map command={{
     type: CommandType.Map,
     data: '',
-  }}/>)
+  }} />)
   const linkElement = screen.getByText(/learn react/i)
   expect(linkElement).toBeInTheDocument()
 })

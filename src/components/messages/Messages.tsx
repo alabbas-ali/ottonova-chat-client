@@ -98,11 +98,14 @@ function Messages(prop: MessagesProp) {
       time: time,
       key: stringHash(mess.message + time),
     }
+
     setMessages((prevMessages) => {
       const newMessages: MessageCollection = { ...prevMessages }
       newMessages[messageWithTime.key] = messageWithTime
       return newMessages
     })
+
+    setCommand(() => null)
   }
 
   /**
@@ -127,13 +130,13 @@ function Messages(prop: MessagesProp) {
   const renderCommandComponent = (command: Command | null) => {
     switch (command?.type) {
       case CommandType.Date:
-        return <DateCommand command={command} ></DateCommand>
+        return <DateCommand command={command} onResponce={sendMessage}></DateCommand>
       case CommandType.Map:
         return <Map command={command} ></Map>
       case CommandType.Rate:
-        return <Rate command={command} ></Rate>
+        return <Rate command={command} onResponce={sendMessage}></Rate>
       case CommandType.Complete:
-        return <Complete command={command} ></Complete>
+        return <Complete command={command} onResponce={sendMessage}></Complete>
     }
     return <></>
   }

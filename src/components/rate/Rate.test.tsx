@@ -7,7 +7,7 @@ test('renders learn react link', () => {
   render(<Rate command={{
     type: CommandType.Rate,
     data: '',
-  }}/>)
+  }} onResponce={(t: string) => console.log(t)}/>)
   const linkElement = screen.getByText(/learn react/i)
   expect(linkElement).toBeInTheDocument()
 })

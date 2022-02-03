@@ -1,13 +1,18 @@
 import React, { useState } from "react"
+import PropTypes from 'prop-types'
 
 import './StarRating.scss'
 
-function StarRating() {
+interface StarRatingProp {
+	onRate: Function
+}
+
+function StarRating(prop: StarRatingProp) {
 	const rating = 0
 	const [hover, setHover] = useState(0)
 
 	const setRating = (rate: number) => {
-
+		prop.onRate(rate)
 	}
 
 	return (
@@ -28,7 +33,11 @@ function StarRating() {
 				)
 			})}
 		</div>
-	);
-};
+	)
+}
+
+StarRating.propTypes = {
+	onRate: PropTypes.func.isRequired,
+}
 
 export default StarRating
