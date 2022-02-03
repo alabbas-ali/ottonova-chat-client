@@ -28,16 +28,11 @@ function DateCommand(prop: DateProp) {
     }
   }
 
-  const sendResponce = (day: string) => {
-    console.info(`day : ${day} is selected`)
-    prop.onResponce(day)
-  }
-
   return (
     <div className="date-wrapper">
       <label>Please Select a day in future : </label> 
       {buttons.map(button => {
-        return <button key={button} type="button" onClick={e => sendResponce(button)}  > { button } </button>
+        return <button key={button} type="button" onClick={e => prop.onResponce(button)}  > { button } </button>
       })}
     </div>
   )

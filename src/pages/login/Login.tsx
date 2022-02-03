@@ -1,54 +1,39 @@
 import React, { FormEvent, useState } from 'react'
 import PropTypes from 'prop-types'
+import {
+  Avatar,
+  Container,
+  CssBaseline,
+  Typography,
+  TextField,
+  Button,
+} from '@material-ui/core'
 
-import './Login.scss'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import { makeStyles } from '@material-ui/core/styles'
 
-interface Credentials {
-  username: string
-  password: string
-}
-
-/**
- * this function is a replacment of server side creating a JWT token for the user 
- * @param credentials 
- * @returns 
- */
-async function loginUser(credentials: Credentials) {
-  const HMACSHA256 = (stringToSign: string, secret: string) => "not_implemented"
-
-  // The header typically consists of two parts: 
-  // the type of the token, which is JWT, and the signing algorithm being used, 
-  // such as HMAC SHA256 or RSA.
-  const header = {
-    "alg": "HS256",
-    "typ": "JWT",
-    "kid": "vpaas-magic-cookie-1fc542a3e4414a44b2611668195e2bfe/4f4910"
-  }
-  const encodedHeaders = btoa(JSON.stringify(header))
+import { loginUser } from '../../services/loginSerive'
 
 
-  // The second part of the token is the payload, which contains the claims.
-  // Claims are statements about an entity (typically, the user) and 
-  // additional data. There are three types of claims: 
-  // registered, public, and private claims.
-  const claims = {
-    username: credentials.username,
-    role: "user",
-  }
-  const encodedPlayload = btoa(JSON.stringify(claims))
-
-
-  // create the signature part you have to take the encoded header, 
-  // the encoded payload, a secret, the algorithm specified in the header, 
-  // and sign that.
-  const signature = HMACSHA256(`${encodedHeaders}.${encodedPlayload}`, "mysecret")
-  const encodedSignature = btoa(signature)
-
-  const jwtToken = `${encodedHeaders}.${encodedPlayload}.${encodedSignature}`
-  return {
-    token: jwtToken
-  }
-}
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}))
 
 interface LoginProp {
   setToken: Function
@@ -59,6 +44,8 @@ function Login(prop: LoginProp) {
   const [error, setError] = useState<string>()
   const [username, setUserName] = useState<string>()
   const [password, setPassword] = useState<string>()
+
+  const classes = useStyles()
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -72,25 +59,58 @@ function Login(prop: LoginProp) {
   }
 
   return (
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-      {error!}
-      <span> </span>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        {error ?
+          <Typography component="h1" variant="h5">
+            {error}
+          </Typography>
+          : <></>
+        }
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={e => setUserName(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
+        <form onSubmit={handleSubmit} className={classes.form} >
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoFocus
+            onChange={(e: { target: { value: React.SetStateAction<string | undefined> } }) => setUserName(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={(e: { target: { value: React.SetStateAction<string | undefined> } }) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Login
+          </Button>
+        </form>
+      </div>
+    </Container>
   )
 }
 

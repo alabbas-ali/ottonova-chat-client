@@ -14,15 +14,10 @@ interface RateProp {
 
 function Rate(prop: RateProp) {
 
-  const sendResponce = (rate: string) => {
-    console.info(`day : ${rate} is selected`)
-    prop.onResponce(rate)
-  }
-
   return (
     <div className="rate-wrapper">
       <label>Please rate your experience : </label> 
-      <StarRating onRate={sendResponce} />
+      <StarRating onRate={prop.onResponce} />
     </div>
   )
 }

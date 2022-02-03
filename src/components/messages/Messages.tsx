@@ -2,14 +2,88 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Socket } from 'socket.io-client'
 import stringHash from '@sindresorhus/string-hash'
+import {
+  IconButton,
+  makeStyles,
+  TextField,
+} from '@material-ui/core'
+import SendIcon from '@material-ui/icons/Send'
 
-import { Command, CommandType } from '../../models/command'
+import {
+  Command,
+  CommandType,
+} from '../../models/command'
 import DateCommand from '../date/DateCommand'
 import Complete from '../complete/Complete'
 import Rate from '../rate/Rate'
 import Map from '../map/Map'
 
-import './Messages.scss'
+const useStyles = makeStyles((theme) => ({
+  container: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  chatContainer: {
+    height: '100%',
+    display: 'block',
+  },
+  message: {
+    position: 'relative',
+    display: 'inline-block',
+    margin: '1.5rem 0 0 0',
+    transition: '0.5s all',
+    listStyle: 'none',
+    width: '100%',
+  },
+  resivedMessage: {
+    float: 'left',
+    backgroundColor: '#E91E63',
+    padding: '0.5rem 1rem',
+    color: '#fff',
+    borderRadius: '1rem',
+    borderBottomLeftRadius: '0.125rem',
+  },
+  sendMessage: {
+    float: 'right',
+    backgroundColor: '#ECEFF1',
+    padding: '0.5rem 1rem',
+    color: '#607D8B',
+    borderRadius: '1rem',
+    borderBottomRightRadius: '0.125rem',
+  },
+  messageText: {
+
+  },
+  messageAuthor: {
+    position: 'absolute',
+    color: '#B0BEC5',
+    fontSize: '0.675rem',
+    top: '0',
+    marginTop: '-1rem',
+  },
+  messageDate: {
+    color: '#CFD8DC',
+    fontSize: '0.5rem',
+    bottom: '-0.35rem',
+    display: 'none',
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textBox: {
+    flex: '0 0 88%',
+  },
+  submit: {
+    flex: '0 0 12%',
+    margin: theme.spacing(1, 0.8, 1),
+  },
+}))
 
 interface MessagesProp {
   username: string
@@ -34,6 +108,8 @@ function Messages(prop: MessagesProp) {
   const [messages, setMessages] = useState<MessageCollection>({})
   const [command, setCommand] = useState<Command | null>(null)
   const [value, setValue] = useState<string>('')
+
+  const classes = useStyles()
 
   /**
    * this effect sets the message and command listeners for the socket 
@@ -91,7 +167,7 @@ function Messages(prop: MessagesProp) {
       message: messages,
     }
     prop.socket.emit('message', mess)
-    
+
     const messageWithTime: MessageWithTime = {
       author: mess.author,
       message: mess.message,
@@ -117,9 +193,11 @@ function Messages(prop: MessagesProp) {
    */
   const submitForm = (e: FormEvent) => {
     e.preventDefault()
-    sendMessage(value)
-    setValue('')
-    prop.socket.emit('command', {})
+    if (value) {
+      sendMessage(value)
+      setValue('')
+      prop.socket.emit('command', {})
+    }
   }
 
   /**
@@ -142,37 +220,55 @@ function Messages(prop: MessagesProp) {
   }
 
   return (
-    <>
-      <div className="message-list">
+    <div className={classes.container}>
+      <div className={classes.chatContainer}>
         {(Object.values<MessageWithTime>(messages)
           .sort((a: MessageWithTime, b: MessageWithTime) => a.time.getTime() - b.time.getTime())
           .map((message: MessageWithTime) => (
-            <div
-              key={message.key}
-              className="message-container"
-              title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
-            >
-              <span className="date">{new Date(message.time).toLocaleTimeString()} : </span>
-              <span className="message">{message.message}</span>
+            <div className={classes.message}>
+              <div
+                key={message.key}
+                className={message.author === prop.username ? classes.resivedMessage : classes.sendMessage}
+                title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
+              >
+                <span 
+                  className={classes.messageAuthor} 
+                  style={message.author === prop.username ? {left: '0'} : {right: '0'}}
+                >
+                  {message.author}
+                </span>
+                <span className={classes.messageText}>{message.message}</span>
+                <span className={classes.messageDate}>{new Date(message.time).toLocaleTimeString()}</span>
+              </div>
             </div>
           ))
         )}
-      </div>
-      <div>
         {renderCommandComponent(command)}
       </div>
-      <form onSubmit={submitForm}>
-        <input
-          autoFocus
-          value={value}
+
+      <form onSubmit={submitForm} className={classes.form}>
+        <TextField
+          variant="standard"
+          margin="normal"
+          required
+          id="message"
+          name="message"
           placeholder="Type your message"
-          onChange={(e) => {
-            setValue(e.currentTarget.value);
-          }}
+          value={value}
+          autoFocus
+          className={classes.textBox}
+          onChange={(e: { target: { value: React.SetStateAction<string> } }) => setValue(e.target.value)}
         />
-        <button type="submit">Send</button>
+        <IconButton
+          type="submit"
+          color="primary"
+          aria-label="send"
+          className={classes.submit}
+        >
+          <SendIcon />
+        </IconButton>
       </form>
-    </>
+    </div>
   )
 }
 

@@ -10,16 +10,11 @@ interface CompleteProp {
 
 function Complete(prop: CompleteProp) {
 
-  const sendResponce = (answer: string) => {
-    console.info(`day : ${answer} is selected`)
-    prop.onResponce(answer)
-  }
-
   return (
     <div className="complete-wrapper">
       <label>Would you like to close the conversation : </label> 
-      <button type="button" onClick={e => sendResponce('yes')}  > Yes </button>
-      <button type="button" onClick={e => sendResponce('no')}  > No </button>
+      <button type="button" onClick={e => prop.onResponce('yes')}  > Yes </button>
+      <button type="button" onClick={e => prop.onResponce('no')}  > No </button>
     </div>
   )
 }

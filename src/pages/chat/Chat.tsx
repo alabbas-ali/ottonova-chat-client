@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import io, { Socket } from 'socket.io-client'
 import jwt_decode from 'jwt-decode'
+import { Container } from '@material-ui/core'
 
 import Messages from '../../components/messages/Messages'
 
-import './Chat.scss'
 
 interface ChatProp {
   token: string
@@ -26,15 +26,13 @@ function Chat(prop: ChatProp) {
   const jsonPayload = jwt_decode<{username: string, role: string}>(prop.token)
   
   return (
-    <div className="chat-wrapper">
+    <Container component="main" maxWidth="xs">
       { socket ? (
-        <div className="chat-container">
-          <Messages socket={socket} username={jsonPayload.username}/>
-        </div>
+        <Messages socket={socket} username={jsonPayload.username}/>
       ) : (
         <div>Not Connected</div>
       )}
-    </div>
+    </Container>
   )
 }
 
