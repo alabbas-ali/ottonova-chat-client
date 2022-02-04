@@ -1,6 +1,38 @@
-# Getting Started with Create React App
+# OTTONOVA chat clint 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a react chat clinet project.
+This project is created as a chat clint for the chat server deplyed at https://demo-chat-server.on.ag/
+
+## Libraries
+
+- [@material-ui/core](https://v4.mui.com/): Used as UX/UI freamwork.
+- [@material-ui/icons](https://v4.mui.com/components/material-icons/#material-icons): React Material icons.
+- [@sindresorhus/string-hash](https://www.npmjs.com/package/@sindresorhus/string-hash): Used to create a unique id for each chat message.
+- [google-map-react](https://www.npmjs.com/package/google-map-react): A small set of the Google Maps API. to render any React component on the Google Map.
+- [jwt-decode](https://www.npmjs.com/package/jwt-decode): Used in this case to create a fake JWT token for a loged in user.
+
+
+## Project structure
+
+```
+├── .env
+└── src/
+    ├── assets/
+    ├── components/
+    ├── models/
+    ├── pages/
+    │    ├── app.test.tsx
+    │    └── app.tsx
+    ├── services/
+    ├── utils/
+    ├── index.css
+    └── index.tsx
+```
+- .env : This is a basic configuration file for config the `create-react-app` .
+- pages directory: contains the intial login page and chat page.
+- models directory: contains all the shared models.
+- components directory: contains all the component that can by used in any page.
+- service directory: usually it should contains all the services that can handle request to backend and responce to use HTTP API endpoint. decabsolate the responce or encapsulate date to be send to the server. In this case it contans a fake login function that create a JWT token.
 
 ## Available Scripts
 
