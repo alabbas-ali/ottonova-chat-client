@@ -17,6 +17,12 @@ import DateCommand from '../date/DateCommand'
 import Complete from '../complete/Complete'
 import Rate from '../rate/Rate'
 import Map from '../map/Map'
+import { sharedStyle } from '../../utils/sharedStyle'
+import { 
+  Message,
+  MessageCollection,
+  MessageWithTime,
+} from '../../models/message'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,46 +34,19 @@ const useStyles = makeStyles((theme) => ({
   chatContainer: {
     height: '100%',
     display: 'block',
-  },
-  message: {
-    position: 'relative',
-    display: 'inline-block',
-    margin: '1.5rem 0 0 0',
-    transition: '0.5s all',
-    listStyle: 'none',
-    width: '100%',
-  },
-  resivedMessage: {
-    float: 'left',
-    backgroundColor: '#E91E63',
-    padding: '0.5rem 1rem',
-    color: '#fff',
-    borderRadius: '1rem',
-    borderBottomLeftRadius: '0.125rem',
-  },
-  sendMessage: {
-    float: 'right',
-    backgroundColor: '#ECEFF1',
-    padding: '0.5rem 1rem',
-    color: '#607D8B',
-    borderRadius: '1rem',
-    borderBottomRightRadius: '0.125rem',
-  },
-  messageText: {
-
-  },
-  messageAuthor: {
-    position: 'absolute',
-    color: '#B0BEC5',
-    fontSize: '0.675rem',
-    top: '0',
-    marginTop: '-1rem',
-  },
-  messageDate: {
-    color: '#CFD8DC',
-    fontSize: '0.5rem',
-    bottom: '-0.35rem',
-    display: 'none',
+    overflow: 'auto',
+    paddingRight: '5px',
+    '&::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+      webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey'
+    }
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -90,26 +69,13 @@ interface MessagesProp {
   socket: Socket
 }
 
-interface Message {
-  author: string
-  message: string
-}
-
-interface MessageWithTime extends Message {
-  time: Date
-  key: number
-}
-
-interface MessageCollection {
-  [key: string]: MessageWithTime
-}
-
 function Messages(prop: MessagesProp) {
   const [messages, setMessages] = useState<MessageCollection>({})
   const [command, setCommand] = useState<Command | null>(null)
   const [value, setValue] = useState<string>('')
 
   const classes = useStyles()
+  const sharedClasses = sharedStyle()
 
   /**
    * this effect sets the message and command listeners for the socket 
@@ -225,20 +191,19 @@ function Messages(prop: MessagesProp) {
         {(Object.values<MessageWithTime>(messages)
           .sort((a: MessageWithTime, b: MessageWithTime) => a.time.getTime() - b.time.getTime())
           .map((message: MessageWithTime) => (
-            <div className={classes.message}>
+            <div key={message.key} className={sharedClasses.message}>
               <div
-                key={message.key}
-                className={message.author === prop.username ? classes.resivedMessage : classes.sendMessage}
+                className={message.author === prop.username ? sharedClasses.sendMessage : sharedClasses.resivedMessage}
                 title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
               >
                 <span 
-                  className={classes.messageAuthor} 
+                  className={sharedClasses.messageAuthor} 
                   style={message.author === prop.username ? {left: '0'} : {right: '0'}}
                 >
                   {message.author}
                 </span>
-                <span className={classes.messageText}>{message.message}</span>
-                <span className={classes.messageDate}>{new Date(message.time).toLocaleTimeString()}</span>
+                <span>{message.message}</span>
+                <span className={sharedClasses.messageDate}>{new Date(message.time).toLocaleTimeString()}</span>
               </div>
             </div>
           ))

@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './Complete.scss'
+import { Button } from '@material-ui/core'
+
 import { Command } from '../../models/command'
+import { sharedStyle } from '../../utils/sharedStyle'
 
 interface CompleteProp {
   command: Command
@@ -9,12 +11,36 @@ interface CompleteProp {
 }
 
 function Complete(prop: CompleteProp) {
+  const sharedClasses = sharedStyle()
 
   return (
-    <div className="complete-wrapper">
-      <label>Would you like to close the conversation : </label> 
-      <button type="button" onClick={e => prop.onResponce('yes')}  > Yes </button>
-      <button type="button" onClick={e => prop.onResponce('no')}  > No </button>
+    <div className={sharedClasses.message}>
+      <div className={sharedClasses.resivedMessage}>
+        <span className={sharedClasses.messageAuthor} style={{ left: '0' }} > </span>
+        <span>Would you like to close the conversation ? <br />
+          <Button
+            size="small"
+            variant="outlined"
+            color="primary"
+            type="button"
+            className={sharedClasses.smallButton}
+            onClick={e => prop.onResponce('yes')}
+          >
+            Yes
+          </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            color="primary"
+            type="button"
+            className={sharedClasses.smallButton}
+            onClick={e => prop.onResponce('no')}
+          >
+            No
+          </Button>
+        </span>
+        <span className={sharedClasses.messageDate}>{new Date().toLocaleTimeString()}</span>
+      </div>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './DateCommand.scss'
+import { Button } from '@material-ui/core'
+
 import { Command } from '../../models/command'
+import { sharedStyle } from '../../utils/sharedStyle'
 
 interface DateProp {
   command: Command
@@ -9,6 +11,8 @@ interface DateProp {
 }
 
 function DateCommand(prop: DateProp) {
+
+  const sharedClasses = sharedStyle()
 
   const days = [
     'Sunday',
@@ -24,16 +28,32 @@ function DateCommand(prop: DateProp) {
   for (let i = new Date(prop.command.data).getDay(); num <= 5; i++) {
     if (days[i % 7] !== 'Sunday' && days[i % 7] !== 'Saturday') {
       buttons.push(days[i % 7])
-      num ++
+      num++
     }
   }
 
   return (
-    <div className="date-wrapper">
-      <label>Please Select a day in future : </label> 
-      {buttons.map(button => {
-        return <button key={button} type="button" onClick={e => prop.onResponce(button)}  > { button } </button>
-      })}
+    <div className={sharedClasses.message}>
+      <div className={sharedClasses.resivedMessage}>
+        <span className={sharedClasses.messageAuthor} style={{ left: '0' }} > </span>
+        <span>
+          Please Select a day in future : <br/>
+          {buttons.map(button => {
+            return <Button 
+              key={button} 
+              size="small" 
+              variant="outlined" 
+              color="primary" 
+              type="button"
+              className={sharedClasses.smallButton}
+              onClick={e => prop.onResponce(button)} 
+            > 
+              {button} 
+            </Button>
+          })}
+        </span>
+        <span className={sharedClasses.messageDate}>{new Date().toLocaleTimeString()}</span>
+      </div>
     </div>
   )
 }
